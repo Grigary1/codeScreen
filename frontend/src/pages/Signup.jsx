@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import {AgeIcon,EmailIcon,OTPSIcon,PasswordIcon,UserIcon} from '../assets/svgIcons.jsx'
+import { useDispatch } from 'react-redux';
+import { sendOtp } from '../redux/Auth.js';
 const InputIcon = ({ children }) => (
   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
     {children}
@@ -38,6 +40,9 @@ const ActionButton = ({ onClick, type = "submit", disabled = false, children }) 
 
 
 export default function Signup() {
+
+    const dispatch=useDispatch();
+
   // 'signup' or 'login'
   const [view, setView] = useState('signup'); 
   // 'details', 'otp', 'password'
@@ -62,22 +67,21 @@ export default function Signup() {
     setError(''); 
   };
 
-  const handleSendOtp = (e) => {
+  const handleSendOtp = async(e) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.age) {
       setError('Please fill in all details.');
       return;
     }
-    setIsLoading(true);
-    setError('');
-    setMessage('');
-    // API call to send OTP
-    console.log('Sending OTP to:', formData.email);
-    setTimeout(() => {
-      setIsLoading(false);
-      setMessage(`An OTP has been sent to ${formData.email}.`);
-      setSignupStep('otp');
-    }, 1500);
+    try {
+        const res=await dispatch(sendOtp(formData)).unwrap();
+        setMessage(res.message);
+        setSignupStep('otp');
+    } catch (error) {
+        setError(error);
+    }finally{
+        setIsLoading(false);
+    }
   };
 
   const handleVerifyOtp = (e) => {
