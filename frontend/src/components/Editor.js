@@ -3,7 +3,7 @@ import Editor from "@monaco-editor/react";
 import { socket } from "../socket";
 
 const CodeEditor = ({ roomId }) => {
-  const [code, setCode] = useState("// Start coding...");
+  const [code, setCode] = useState("// Write your code heere ...");
   const isRemoteUpdate = useRef(false);
 
   useEffect(() => {
