@@ -5,6 +5,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import userRouter from './routes/userRouter.js';
 import connectDB from './config/mongodb.js';
+import roomRouter from './routes/roomRouter.js';
 
 dotenv.config();
 

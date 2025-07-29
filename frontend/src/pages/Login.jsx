@@ -24,9 +24,11 @@ const Login = () => {
     
       if (data.success) {
 
-        setUserCred(data.user.id, data.token);
+        setUserCred(data.user.id, data.token,data.user.role);
         localStorage.setItem("user",data.user.id);
         localStorage.setItem("token", data.token);
+        console.log("role local ",data.user.role);
+        localStorage.setItem("role",data.user.role);
         navigate('/rooms')
       }
     } catch (error) {

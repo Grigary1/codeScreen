@@ -5,16 +5,19 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [role,setRole]=useState(null);
   const [token, setToken] = useState(null);
 
-  const setUserCred = (userData, token) => {
+  const setUserCred = (userData, token,userRole) => {
     setUser(userData);
     setToken(token);
+    setRole(userRole);
   };
 
   const logout = () => {
     setUser(null);
     setToken(null);
+    setRole(null);
   };
 
   useEffect(()=>{
