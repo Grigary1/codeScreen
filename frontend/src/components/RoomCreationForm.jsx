@@ -8,6 +8,7 @@ const RoomCreationForm = ({ interviewerId }) => {
   const handleCreateRoom = () => {
     // TODO: call API to create room with { interviewerId, name, language, isPrivate }
     console.log('Create room', { interviewerId, name, language, isPrivate });
+    
   };
 
   return (

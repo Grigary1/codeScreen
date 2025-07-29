@@ -43,6 +43,7 @@ io.on('connection', (socket) => {
 app.get('/', (req, res) => res.send('API Running'));
 app.use('/api',userRouter);
 app.use('/api',roomRouter);
+app.use('/api/interviewer',interviewerRouter);
 
 server.listen(process.env.PORT, () =>
   console.log(`Backend running on port ${process.env.PORT}`)
