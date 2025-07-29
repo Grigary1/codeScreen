@@ -7,6 +7,7 @@ import RoomList from './pages/RoomList';
 import CodeEditor from './pages/CodeEditor';
 import InterviewerDashboard from './pages/InterviewerDashboard';
 import CandidateDashboard from './pages/CandidateDashboard';
+import RoomEditor from './components/RoomEditor';
 
 
 
@@ -42,6 +43,7 @@ const App = () => {
           )
         }
       />
+      <Route path="/room-editor" element={role ? <RoomEditor /> : <RoomEditor/>} />
       <Route path="/room/:roomId" element={user ? <CodeEditor /> : <Navigate to="/login" />} />
       <Route path="/" element={<Navigate to={user ? "/rooms" : "/login"} />} />
     </Routes>
