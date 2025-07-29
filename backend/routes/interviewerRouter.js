@@ -1,9 +1,11 @@
 import express from 'express'
-import { createRoom } from '../controllers/roomController.js';
+import { createRoom, myRooms } from '../controllers/roomController.js';
+import userAuth from '../middlewares/userAuth.js';
 
 const interviewerRouter=express.Router();
 
-interviewerRouter.post('/create-room',createRoom);
+interviewerRouter.post('/create-room',userAuth,createRoom);
+interviewerRouter.get('/my-rooms',userAuth,myRooms);
 
 
-export default roomRouter;
+export default interviewerRouter;

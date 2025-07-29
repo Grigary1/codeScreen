@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import userRouter from './routes/userRouter.js';
 import connectDB from './config/mongodb.js';
 import roomRouter from './routes/roomRouter.js';
+import interviewerRouter from './routes/interviewerRouter.js';
 
 dotenv.config();
 

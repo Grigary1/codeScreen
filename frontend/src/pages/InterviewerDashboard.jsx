@@ -25,7 +25,7 @@ const InterviewerDashboard = () => {
             {/* Room Creation */}
             <section>
                 <h2 className="text-2xl font-semibold mb-4">Create New Room</h2>
-                <RoomCreationForm interviewerId={interviewerId} />
+                <RoomCreationForm/>
             </section>
 
             {/* My Rooms */}
