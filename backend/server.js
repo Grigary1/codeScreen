@@ -3,6 +3,10 @@ import http from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import userRouter from './routes/userRouter.js';
+import connectDB from './config/mongodb.js';
+import roomRouter from './routes/roomRouter.js';
+import interviewerRouter from './routes/interviewerRouter.js';
 
 dotenv.config();
 
@@ -11,6 +15,8 @@ const server = http.createServer(app);
 
 app.use(cors({ origin: process.env.CLIENT_URL }));
 app.use(express.json());
+
+connectDB();
 
 const io = new Server(server, {
   cors: {
@@ -36,6 +42,9 @@ io.on('connection', (socket) => {
 });
 
 app.get('/', (req, res) => res.send('API Running'));
+app.use('/api',userRouter);
+app.use('/api',roomRouter);
+app.use('/api/interviewer',interviewerRouter);
 
 server.listen(process.env.PORT, () =>
   console.log(`Backend running on port ${process.env.PORT}`)
