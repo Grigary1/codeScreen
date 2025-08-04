@@ -43,6 +43,8 @@ const App = () => {
           )
         }
       />
+      <Route
+        path="/candidate-dashboard" element={<CandidateDashboard/>}/>
       <Route path="/room-editor" element={role ? <RoomEditor /> : <RoomEditor/>} />
       <Route path="/room/:roomId" element={user ? <CodeEditor /> : <Navigate to="/login" />} />
       <Route path="/" element={<Navigate to={user ? "/rooms" : "/login"} />} />
