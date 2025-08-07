@@ -1,12 +1,33 @@
 import interviewerModel from '../models/interviewerModel.js';
 
+export const joinRoom = async (req, res) => {
+    const { roomId } = req.body
+
+    try {
+        const interviewer = await interviewerModel.findOne({
+            'rooms.roomId': roomId,
+            'rooms.isActive': true,
+            'rooms.isPrivate':false
+        })
+
+        if (!interviewer) {
+            return res.status(404).json({ success: false, message: 'Room not found or inactive' })
+        }
+
+        res.json({ success: true })
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Server error' })
+    }
+
+}
+
 export const searchRoom = async (req, res) => {
     try {
         const q = req.query.s || '';
-        if(q.length==0){
+        if (q.length == 0) {
             return res.status(400).json({
-                success:false,
-                message:"No search found"
+                success: false,
+                message: "No search found"
             })
         }
         const limit = parseInt(req.query.limit) || 10;
