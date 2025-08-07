@@ -7,44 +7,43 @@ import userRouter from './routes/userRouter.js';
 import connectDB from './config/mongodb.js';
 import roomRouter from './routes/roomRouter.js';
 import interviewerRouter from './routes/interviewerRouter.js';
+import { Server } from "socket.io";
 
 dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
+const io = new Server(server, {
+  cors: { origin: "*" }, // Allow from frontend
+});
+
 
 app.use(cors({ origin: process.env.CLIENT_URL }));
 app.use(express.json());
 
 connectDB();
 
-const io = new Server(server, {
-  cors: {
-    origin: process.env.CLIENT_URL,
-    methods: ['GET', 'POST'],
-  },
-});
+io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
 
-io.on('connection', (socket) => {
-  console.log('Socket connected:', socket.id);
-
-  socket.on('join-room', (roomId) => {
+  socket.on("join-room", (roomId) => {
     socket.join(roomId);
+    console.log(`User ${socket.id} joined room ${roomId}`);
   });
 
-  socket.on('code-change', ({ roomId, code }) => {
-    socket.to(roomId).emit('receive-code', code);
+  socket.on("code-change", ({ roomId, code }) => {
+    socket.to(roomId).emit("receive-code", code); // broadcast to others
   });
 
-  socket.on('disconnect', () => {
-    console.log('Socket disconnected:', socket.id);
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
   });
 });
 
 app.get('/', (req, res) => res.send('API Running'));
-app.use('/api',userRouter);
-app.use('/api',roomRouter);
-app.use('/api/interviewer',interviewerRouter);
+app.use('/api', userRouter);
+app.use('/api', roomRouter);
+app.use('/api/interviewer', interviewerRouter);
 
 server.listen(process.env.PORT, () =>
   console.log(`Backend running on port ${process.env.PORT}`)

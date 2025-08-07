@@ -4,10 +4,11 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import { useAuth } from './context/AuthContext';
 import RoomList from './pages/RoomList';
-import CodeEditor from './pages/CodeEditor';
+import CodeEditor from './components/Editor.jsx';
 import InterviewerDashboard from './pages/InterviewerDashboard';
 import CandidateDashboard from './pages/CandidateDashboard';
 import RoomEditor from './components/RoomEditor';
+
 
 
 
@@ -44,9 +45,9 @@ const App = () => {
         }
       />
       <Route
-        path="/candidate-dashboard" element={<CandidateDashboard/>}/>
-      <Route path="/room-editor" element={role ? <RoomEditor /> : <RoomEditor/>} />
-      <Route path="/room/:roomId" element={user ? <CodeEditor /> : <Navigate to="/login" />} />
+        path="/candidate-dashboard" element={<CandidateDashboard />} />
+      <Route path="/room-editor" element={role ? <RoomEditor /> : <RoomEditor />} />
+      <Route path="/session/:roomId" element=<CodeEditor/> />
       <Route path="/" element={<Navigate to={user ? "/rooms" : "/login"} />} />
     </Routes>
   )
