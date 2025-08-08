@@ -13,6 +13,7 @@ const RoomCreationForm = () => {
         try {
             const res = await dispatch(createRoom({ name, language, isPrivate }));
             const data = res.payload;
+            
             if (data.success) {
                 alert("Room created");
             }
