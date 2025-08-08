@@ -11,7 +11,7 @@ export default function JoinByLink() {
       const url = new URL(link)
       const pathParts = url.pathname.split('/')
 
-      if (pathParts.length === 3 && pathParts[1] === 'session') {
+      if (pathParts.length === 3 && pathParts[1] === 'room') {
         const roomId = pathParts[2]
 
         // 🔁 Send to backend for validation

@@ -1,23 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { myRooms } from '../redux/interviewerSlice';
+import { Link } from 'react-router-dom';
 
 const RoomList = ({ interviewerId }) => {
     const [languageFilter, setLanguageFilter] = useState('');
     const dispatch = useDispatch();
     const [rooms, setRooms] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const fetchRooms = async () => {
+        setLoading(true);
         try {
             const res = await dispatch(myRooms({ search: languageFilter }));
             const data = res.payload;
-            if (data.success) {
-                setRooms(data.data);
+            console.log("Fetched Rooms:", data);
+    
+            if (Array.isArray(data)) {
+                setRooms(data);
+            } else if (data?.rooms && Array.isArray(data.rooms)) {
+                setRooms(data.rooms);
             } else {
                 setRooms([]);
             }
         } catch (error) {
             console.error('Error fetching rooms:', error);
+            setRooms([]);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -26,7 +37,6 @@ const RoomList = ({ interviewerId }) => {
     }, [languageFilter]);
 
     const endRoom = (roomId) => {
-        // TODO: implement API call to mark isActive=false
         console.log('End room', roomId);
     };
 
@@ -34,14 +44,13 @@ const RoomList = ({ interviewerId }) => {
 
     return (
         <div className="space-y-4">
+            {/* Language Filter Buttons */}
             <div className="flex gap-2">
                 {languages.map((lang) => (
                     <button
                         key={lang}
                         onClick={() =>
-                            setLanguageFilter((prev) =>
-                                prev === lang ? '' : lang
-                            )
+                            setLanguageFilter((prev) => (prev === lang ? '' : lang))
                         }
                         className={`px-4 py-2 rounded ${
                             languageFilter === lang
@@ -54,18 +63,34 @@ const RoomList = ({ interviewerId }) => {
                 ))}
             </div>
 
-            {rooms && rooms.length > 0 ? (
+            {/* Status Messages */}
+            {loading ? (
+                <p className="text-gray-500">Loading rooms...</p>
+            ) : error ? (
+                <p className="text-red-500">{error}</p>
+            ) : rooms.length === 0 ? (
+                <p className="text-gray-500">
+                    {languageFilter
+                        ? `No rooms found for "${languageFilter}".`
+                        : 'No rooms found.'}
+                </p>
+            ) : (
                 rooms.map((room) => (
                     <div
                         key={room.roomId}
-                        className="flex justify-between items-center bg-white p-4 rounded shadow"
+                        className="flex justify-between items-center bg-white p-4 rounded shadow hover:bg-gray-50"
                     >
-                        <div>
-                            <h3 className="font-semibold">{room.name}</h3>
+                        <Link
+                            to={`/session/${room.roomId}`}
+                            className="flex-1 cursor-pointer"
+                        >
+                            <h3 className="font-semibold text-blue-600 hover:underline">
+                                {room.name}
+                            </h3>
                             <p className="text-sm text-gray-600">
                                 Status: {room.isActive ? 'Active' : 'Inactive'}
                             </p>
-                        </div>
+                        </Link>
                         <div className="space-x-2">
                             <button
                                 onClick={() =>
@@ -86,8 +111,6 @@ const RoomList = ({ interviewerId }) => {
                         </div>
                     </div>
                 ))
-            ) : (
-                <p className="text-gray-500">No rooms found.</p>
             )}
         </div>
     );

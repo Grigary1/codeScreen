@@ -107,9 +107,11 @@ export const myRooms = async (req, res) => {
                 $unwind: "$rooms"
             },
             {
-                $match: search
-                    ? { "rooms.language": { $regex: `\\b${search}\\b`, $options: "i" } }
-                    : {}
+                $match: {
+                    ...(search
+                        ? { "rooms.language": { $regex: `\\b${search}\\b`, $options: "i" } }
+                        : {}) // no match condition if no search
+                }
             },
             {
                 $project: {
@@ -187,7 +189,7 @@ export const createRoom = async (req, res) => {
                 interviewerId,
                 rooms: [newRoom],
             });
-
+            console.log("Success");
             return res.status(201).json({
                 success: true,
                 message: "Interviewer created and room added successfully.",
