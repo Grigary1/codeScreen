@@ -1,5 +1,85 @@
 import interviewerModel from '../models/interviewerModel.js';
 
+export const deleteRoom = async (req, res) => {
+    try {
+        console.log("Reached dlt : ",req.body.roomId);
+      const { roomId } = req.body;
+  
+      if (!roomId) {
+        return res.status(400).json({
+          success: false,
+          message: "Provide room id"
+        });
+      }
+  
+      const updatedData = await interviewerModel.findOneAndUpdate(
+        { "rooms.roomId": roomId }, // Find interviewer that has this room
+        { $pull: { rooms: { roomId } } }, // Remove that room
+        { new: true }
+      );
+  
+      if (!updatedData) {
+        return res.status(404).json({
+          success: false,
+          message: "Room not found"
+        });
+      }
+  
+      return res.status(200).json({
+        success: true,
+        message: "Room deleted successfully",
+        data: updatedData
+      });
+  
+    } catch (error) {
+      console.error("Error deleting room:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Server error"
+      });
+    }
+  };
+  
+
+export const endRoom = async (req, res) => {
+    try {
+      const { roomId } = req.body; 
+  
+      if (!roomId) {
+        return res.status(400).json({
+          success: false,
+          message: "Provide room id"
+        });
+      }
+      const updatedData = await interviewerModel.findOneAndUpdate(
+        { "rooms.roomId": roomId },  
+        { $set: { "rooms.$.isActive": false } },
+        { new: true } 
+      );
+  
+      if (!updatedData) {
+        return res.status(404).json({
+          success: false,
+          message: "Room not found"
+        });
+      }
+  
+      return res.status(200).json({
+        success: true,
+        message: "Room ended successfully",
+        data: updatedData
+      });
+  
+    } catch (error) {
+      console.error("Error ending room:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Server error"
+      });
+    }
+  };
+  
+
 export const joinRoom = async (req, res) => {
     const { roomId } = req.body
 
